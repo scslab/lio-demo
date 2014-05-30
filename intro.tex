@@ -9,8 +9,21 @@ system.
 %
 The type system, in addition to reducing undefined behavior, can be
 used to distinguish between pure and side-effecting computations,
-i.e., computations that can and cannot affect the ``external world,''
-while the module system can be used to enforce abstraction (e.g., by
-restricting access to constructors).
+i.e., computations that respectively can and cannot affect the
+``external world,'' while the module system can be used to enforce
+abstraction (e.g., by restricting access to constructors).
 %
 
+However, real world code sometimes requires that we break these
+abstraction barriers (e.g., to provide a fast string library) and
+Haskell provides certain features (e.g., \verb|unsafePerfromIO|) that
+facilitates this.
+%
+Unfortunately this means that if we integrate any untrusted code,
+our program cannot provide any security guarantees---if the untrusted
+code is malicious it can leverage any of these unsafe features to
+cause havoc.
+%
+Hence, to distinguish between the full (unsafe) Haskell language and
+the safe subset, Terei et al. introduced \emph{Safe
+Haskell}~\cite{safehaskell}.

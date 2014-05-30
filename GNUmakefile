@@ -38,7 +38,7 @@ IMAGEDIST := $(filter-out $(IMAGEGEN), $(IMAGES)) \
 ifeq ($(PDF),pdf)
 LATEX     = pdflatex \\nonstopmode\\input
 else
-LATEX     = latex
+LATEX     = latex -shell-escape
 #\\nonstopmode\\input
 DVIPS     = dvips -j0 -G0 -t letter -Pdownload35
 PS2PDF    = GS_OPTIONS=-sPAPERSIZE=letter ps2pdf -sPAPERSIZE=letter -dEmbedAllFonts=true

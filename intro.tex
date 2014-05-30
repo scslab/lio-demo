@@ -13,7 +13,7 @@ i.e., computations that respectively can and cannot affect the
 ``external world,'' while the module system can be used to enforce
 abstraction (e.g., by restricting access to constructors).\footnote{
   Here, we refer to the safe subset of the Haskell language---without
-  \texttt{unsafePerformIO}, etc.---as enforced by
+  \hs|unsafePerformIO|, etc.---as enforced by
   the \emph{Safe Haskell} extension~\cite{safehaskell}.
 }
 %
@@ -31,18 +31,26 @@ malicious, it may, for instance, read reviews from the database and
 leak them to a public server.
 %
 How, then, can we restrict the effects of a computation, without
-imposing that it not perform \emph{any} side-effects?\footnote{
+imposing that it not perform \emph{any} side-effects?~\footnote{
   Indeed, the pure code limitation is unreasonable once we wish to
   further treat our own code as untrustworthy, as to prevent leaks due
   to bugs.
 }
 
 One approach is to restrict computations to a particular monad---one
-other than \texttt{IO}---for which we can control effects.
+other than \hs|IO|---for which we can control effects.
 %
 In this demonstration, we describe the LIO library which implements
-one such monad, called \texttt{LIO} (\emph{Labeled IO}).
+one such monad, called \hs|LIO| (\emph{Labeled IO})~\cite{lio,
+concurrent-lio}.
 %
-Effects in the \texttt{LIO} are mediated according to decentralized
-information flow control (DIFC) policies~\cite{myers:dlm,
-sabelfeld:language-based-iflow}.
+Effects in the \hs|LIO| monad are mediated according to
+decentralized information flow control (DIFC)
+policies~\cite{myers:dlm, sabelfeld:language-based-iflow}.
+%
+In particular, this means that computations can perform arbitrary
+effects, as long as they do not violate the confidentiality or
+integrity of data.
+%
+(Indeed, LIO automatically disallows effects that would violate
+confidentiality or integrity.)

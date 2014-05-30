@@ -1,6 +1,55 @@
 \section{Overview}
 \label{sec:overview}
+
+DIFC systems such as LIO track and control the propagation of
+information by associating a \emph{label} with every piece of data.
+%
+(While LIO is polymorphic in the label model, we focus on LIO with
+DCLabels~\cite{dclabels}, henceforth just labels.)
+%
+A label encodes a security policy as a pair of positive boolean
+formulas over \emph{principals} specifying who may read or write data.
+%
+For example, a review labeled \hs|"alice" \/ "bob" %% "bob"| specifies
+that the review can be read by user \hs|"alice"| or \hs|"bob"|, but
+may only be modified by \hs|"bob"|.
+%
+Indeed, such a label may be associated with \hs|"bob"|'s review, for a
+paper that both \hs|"bob"| and \hs|"alice"| are reviewing.
+%
+
+Labels are partially ordered according to a {\em can flow
+  to} relation $\canflowto$: for any labels $L_A$ and $L_B$, if $L_A
+  \canflowto L_B$ then the policy encoded by $L_A$ is \emph{upheld}
+  by that of $L_B$.
+%
+For example, data labeled $L_A =$ \hs|"alice" \/ "bob" %% "bob"| can
+be written to a file labeled $L_B =$ \hs|"bob" %% "bob"| since $L_B$
+preserves the secrecy of $L_A$.
+%
+In fact, $L_B$ is \emph{more} restrictive, as only
+\hs|"bob"|---not both \hs|"alice"| and \hs|"bob"|---can read the file,
+and, indeed, until \hs|"alice"| submits her review we may wish to
+associate this label with \hs|"bob"|'s review as to ensure that she
+cannot read it.
+%
+Conversely, $L_B \not\canflowto L_A$, and thus data labeled $L_B$
+cannot be written to an object labeled $L_A$ (data secret to
+\hs|"bob"| cannot be leaked to an object that \hs|"alice"| can also
+read).
+
+
 \subsection{Specifying policies with DCLabels}
+
+\begin{minted}[frame=lines]{haskell}
+policy rev = do
+  let author = reviewAuthor rev
+  reviewers <- findReviewers $ reviewId rev
+  makePolicy $ do
+    readers ==> author \/ reviewers
+    writers ==> author
+\end{minted}
+
 \subsection{Restricting code to a safe sublanguage}
 \subsection{Fine grained labeling}
 \subsection{Automatic data labeling for Web applications}

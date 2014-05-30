@@ -19,11 +19,28 @@ abstraction barriers (e.g., to provide a fast string library) and
 Haskell provides certain features (e.g., \verb|unsafePerfromIO|) that
 facilitates this.
 %
-Unfortunately this means that if we integrate any untrusted code,
-our program cannot provide any security guarantees---if the untrusted
-code is malicious it can leverage any of these unsafe features to
-cause havoc.
+Unfortunately this means that if we integrate any untrusted code
+(e.g., a library from Hackage), our program cannot provide any
+security guarantees---if the untrusted code is malicious it can
+leverage any of these unsafe features to cause havoc.
 %
-Hence, to distinguish between the full (unsafe) Haskell language and
-the safe subset, Terei et al. introduced \emph{Safe
+To distinguish between the full (unsafe) Haskell language and the safe
+subset, Terei et al. introduced \emph{Safe
 Haskell}~\cite{safehaskell}.
+%
+(Unless otherwise noted, our use of Haskell will refer to this safe
+subset.)
+
+Unfortunately, simply restricting Haskell to the safe subset is not
+sufficient.
+%
+Building software systems is an error-prone task and harder still is
+the task of building secure applications.
+%
+Indeed, we must additionally restrict the effects that a piece of code
+can perform according to the desired security policy, i.e., restrict
+code to a security-aware sublanguage.
+%
+
+
+

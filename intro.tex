@@ -26,14 +26,23 @@ expected to be anonymous and users in conflict with a paper are
 prohibited from reading specific committee comments.
 %
 When building such a system, if we import a library function that
-performs IO, we risk violating these grantees---if the code is
+performs IO, we risk violating these guarantees---if the code is
 malicious, it may, for instance, read reviews from the database and
 leak them to a public server.
 %
 How, then, can we restrict the effects of a computation, without
-imposing that it not perform \emph{any} side-effects,\footnote{
+imposing that it not perform \emph{any} side-effects?\footnote{
   Indeed, the pure code limitation is unreasonable once we wish to
   further treat our own code as untrustworthy, as to prevent leaks due
   to bugs.
-} and according a security policy?
+}
 
+One approach is to restrict computations to a particular monad---one
+other than \texttt{IO}---for which we can control effects.
+%
+In this demonstration, we describe the LIO library which implements
+one such monad, called \texttt{LIO} (\emph{Labeled IO}).
+%
+Effects in the \texttt{LIO} are mediated according to decentralized
+information flow control (DIFC) policies~\cite{myers:dlm,
+sabelfeld:language-based-iflow}.

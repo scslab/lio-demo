@@ -30,6 +30,9 @@ performs IO, we risk violating these guarantees---if the code is
 malicious, it may, for instance, read reviews from the database and
 leak them to a public server.
 %
+Worse yet, such code may be leaking info rating through more subtle
+means, e.g., by encoding data in the number of reviews.
+%
 How, then, can we restrict the effects of a computation, without
 imposing that it not perform \emph{any} side-effects?~\footnote{
   Indeed, the pure code limitation is unreasonable once we wish to

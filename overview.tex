@@ -18,7 +18,20 @@ Indeed, such a label may be associated with \hs|"bob"|'s review, for a
 paper that both \hs|"bob"| and \hs|"alice"| are reviewing.
 %
 
-Labels are partially ordered according to a {\em can flow
+Our LIO library associates labels with various Haskell constructs.
+%
+For example, we provide labeled alternatives of \hs|IORef|, \hs|MVar|,
+and \hs|Chan|, called \hs|LIORef|, \hs|LMVar|, and \hs|LChan|,
+respectively.
+%
+Moreover, we provide an implementation of a filesystem that associates
+persistent labels with files and a type, \hs|Labeled|, that is used to
+associate a label with individual Haskell terms.
+%
+The latter, for example, is used to associate labels with reviews (e.g.,
+as given by the type \hs|Labeled DCLabel Review|).
+
+Labels on object are partially ordered according to a {\em can flow
   to} relation $\canflowto$: for any labels $L_A$ and $L_B$, if $L_A
   \canflowto L_B$ then the policy encoded by $L_A$ is \emph{upheld}
   by that of $L_B$.
@@ -35,7 +48,7 @@ cannot read it.
 %
 Conversely, $L_B \not\canflowto L_A$, and thus data labeled $L_B$
 cannot be written to an object labeled $L_A$ (data secret to
-\hs|"bob"| cannot be leaked to an object that \hs|"alice"| can also
+\hs|"bob"| cannot be leaked to a file that \hs|"alice"| can also
 read).
 
 

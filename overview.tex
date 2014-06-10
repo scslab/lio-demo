@@ -22,19 +22,17 @@ paper that both \hs|"bob"| and \hs|"alice"| are reviewing.
 Our library associates labels with various language constructs.
 %
 For example, LIO provides labeled mutable references (\hs|LIORef|s),
-labeled channels (\hs|LChan|s), etc.
+labeled channels (\hs|LChan|s), a labeled file-system, a labeled
+database system, etc.
 %
-We also provide an implementation of a filesystem that associates
-persistent labels with files and labeled database system.
+Moreover, we provide a type, \hs|Labeled|, that is used to associate
+an explicit label with individual Haskell terms; since LIO is a
+library, terms that are not explicitly \hs|Labeled| are associated
+with the label of the current context (described below).
 %
-Moreover, we provide a new type, \hs|Labeled|, that is used to
-associate an explicit label with individual Haskell terms.
+\hs|Labeled| values are, for example, used to associate labels with
+reviews.
 %
-(Since LIO is a library terms are otherwise associated with a current
-context label, described below.)
-%
-The latter, for example, is used to associate labels with reviews (e.g.,
-as given by the type \hs|Labeled DCLabel Review|).
 
 Labels on objects are partially ordered according to a {\em can flow
   to} relation $\canflowto$: for any labels $L_A$ and $L_B$, if $L_A
@@ -62,9 +60,9 @@ effects performed by a computation in the \hs|LIO| monad.
 In fact, the \hs|LIO| monad solely encapsulates a computation that
 executes in Haskell's ``default'' \hs|IO| monad.
 %
-Importantly, this computation is associated with a label, called the
-\emph{current label}, which tracks the sensitivity of all the data
-that the computation has observed, i.e., has in scope.
+Importantly, this computation is associated with a label---the
+\emph{current label}---that tracks the sensitivity of all the data
+that the computation has observed, i.e., all data in scope.
 %
 To illustrate the role of the current label, consider the code below
 that reads \hs|"bob"|'s private review and tries to leak it into a
@@ -139,14 +137,14 @@ Unfortunately, the trusted part of an application, that of assigning
 appropriate labels to data, is challenging; indeed, setting an
 overly-permissive label on an object can be a vulnerability.
 %
-While using a simple label model such as DCLabels can help avoid
+And, while using a simple label model such as DCLabels can against
 certain pitfalls, a non-expert approach to setting labels is clearly
 desirable.
 
 In the context of web applications, we present an advancement towards
 making DIFC policy-specification an approachable task for average
-developers by providing a declarative policy language, previously
-developed for the Hails web framework~\cite{hails}.
+developers by using a declarative policy language, as in the Hails web
+framework~\cite{hails}.
 %% \footnote{
 %%   We consider the alternative approach of cloning MIT Prof.  Nickolai
 %%   Zeldovich as future work.

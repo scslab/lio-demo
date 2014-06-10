@@ -14,8 +14,8 @@ popular bug in GitHub's form-submission code~\cite{gitfail}) such
 security-related bugs are inevitable even if developers are careful
 and use safe, high-level languages.
 %
-Indeed, this is because only a small fraction of programmers have the
-right mindset and experience to write secure code.
+Indeed, this is because only a small fraction of programmers are
+actually equipped to write secure code.
 %
 
 
@@ -26,15 +26,16 @@ One approach to bridging this security gap is to use decentralized
 information-flow control (DIFC)~\cite{myers:dlm,
 sabelfeld:language-based-iflow}.
 %
-DIFC tracks and controls the flow of information through a system, in
-order to preserve data confidentiality and integrity.
+DIFC tracks and controls the flow of information through a system,
+according to a security policy.
+% data confidentiality and integrity
 %
 By ensuring that the policy associated with a piece data is always
 enforced, most code in a DIFC system can be considered untrustworthy.
 %
-Indeed, typical DIFC applications are composed of a small trustworthy
-component, where the security policy is specified, and the rest of the
-application logic, which is considered untrustworthy.
+Indeed, a typical DIFC application is composed of two parts: a small
+trustworthy component, where the security policy is specified, and the
+rest of the application logic, which can be untrusted.
 %
 
 %
@@ -52,22 +53,21 @@ untrustworthy developers (even a conflicting reviewer)---the
 underlying runtime system ensures that the confidentiality and
 integrity of a user's reviews will be preserved.
 %
-In a DIFC system, bugs that appear in this crux of the application
-simply \emph{that}---bugs---not vulnerabilities.
+In a DIFC system, bugs that appear in this part of the application
+are simply \emph{that}---bugs---not vulnerabilities.
 
-In this demonstration, we describe one such DIFC system, called
+In this demo, we describe one such DIFC system, called
 LIO~\cite{lio, concurrent-lio}.
 %
 LIO is implemented as a Haskell library, and leverages Haskell's
 monadic approach to encoding side-effects as a way to control how (and
 if) information enters/exists the system.
 %
-Specifically, LIO provides an \hs|LIO| monad, in which
+Specifically, LIO provides an \hs|LIO| monad in which
 all side-effects are mediated according to DIFC.
 %
-Importantly, however, a computation can perform arbitrary, complex
-effects, as long as it does not violate the confidentiality or
-integrity of data.
+Hence, an \hs|LIO| computation can perform arbitrary, complex effects,
+as long as it does not violate the confidentiality or integrity
+policy on data.
 %
-(Indeed, LIO automatically disallows effects that would violate
-confidentiality or integrity.)
+(Indeed, LIO automatically disallows effects that would violate policy.)

@@ -60,13 +60,13 @@ tracks the sensitivity of the data that the computation has observed.
 %
 To illustrate the role of the current label, consider the code below
 that reads \hs|"bob"|'s private review and tries to leak it into a
-labeled references that \hs|"alice"| can read.
+reference that \hs|"alice"| can read.
 \begin{minted}[frame=lines, mathescape]{haskell}
 -- Current label: public == True %% True
 bobReview <- readFile "/reviews/bob/5.txt"
 -- Current label: "bob" %% True
 -- labelOf aliceRef == "alice" %% "alice"
-writeLIORef aliceRef show bobReview
+writeLIORef aliceRef $ show bobReview
 -- Fail: "bob" %% True $\not\canflowto$ "alice" %% "alice"
 \end{minted}
 %
@@ -183,7 +183,7 @@ policy rev = do
 The function is self-explanatory; we only remark that the function
 takes a \hs|Review| and returns a \hs|DCLabel| in a monad \hs|m| that
 allows code to perform database actions (in this case the
-\hs|findreviewersOf| action), a change from the original pure policies
+\hs|findReviewersOf| action), a change from the original pure policies
 of Hails.
 %
 

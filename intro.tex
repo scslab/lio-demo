@@ -1,58 +1,71 @@
 \section{Introduction}
 \label{sec:intro}
 
-Haskell provides many language features that can be used to reduce the
-damage caused by any particular piece of code.
+%\concept{building secure systems is hard}
+Building software systems is a challenging, error-prone task.
 %
-Notable among these are the strong static type system and module
-system.
+As the number of recent vulnerabilities in OpenSSL and the severity of
+bugs---where a single line change can introduce a
+vulnerability~\tocite{}---show, building secure systems is harder still.
 %
-The type system, in addition to reducing undefined behavior, can be
-used to distinguish between pure and side-effecting computations,
-i.e., computations that respectively can and cannot affect the
-``external world,'' while the module system can be used to enforce
-abstraction (e.g., by restricting access to constructors).\footnote{
-  Here, we refer to the safe subset of the Haskell language---without
-  \hs|unsafePerformIO|, etc.---as enforced by
-  the \emph{Safe Haskell} extension~\cite{safehaskell}.
-}
+Unfortunately, as we have learned over again (e.g., recently by the
+popular bug in GitHub's form-submission code~\tocite{}) such
+security-related bugs are inevitable even if developers are careful
+and use safe, high-level languages.
 %
-Unfortunately, even in such a high-level, type-safe language, building
-software systems is an error-prone task and only a few programmers are
-equipped to write secure code,
- 
+Indeed, this is because only a small fraction of programmers have the
+right mindset and experience to write secure code.
+%
+
+
+%\concept{ifc to the rescue}
+How then can we expect the average developer to build secure systems?
+%
+One approach to bridging this security gap is to use decentralized
+information-flow control (DIFC)~\cite{myers:dlm,
+sabelfeld:language-based-iflow}.
+%
+DIFC tracks and controls the flow of information through a system, in
+order to preserve data confidentiality and integrity.
+%
+By ensuring that the policy associated with a piece data is always
+enforced, most code in a DIFC system can be considered untrustworthy.
+%
+Indeed, typical DIFC applications are composed of a small trustworthy
+component, where the security policy is specified, and the rest of the
+application logic, which is considered untrustworthy.
+%
+
+%
+%\concept{example}
 Consider, for instance, a conference review system where reviewers are
 expected to be anonymous and users in conflict with a paper are
 prohibited from reading specific committee comments.
 %
-When building such a system, if we import a library function that
-performs IO, we risk violating these guarantees---if the code is
-malicious, it may, for instance, read reviews from the database and
-leak them to a public server.
+Here, the site administrator is trusted to specify such policies on
+reviews. 
 %
-Worse yet, such code may be leaking info rating through more subtle
-means, e.g., by encoding data in the number of reviews.
+However, the rest of the application, which may for instance fetch
+data from the network, read reviews, etc., can be built by
+untrustworthy developers (even a conflicting reviewer)---the
+underlying runtime system ensures that the confidentiality and
+integrity of a user's reviews will be preserved.
 %
-How, then, can we restrict the effects of a computation, without
-imposing that it not perform \emph{any} side-effects?~\footnote{
-  Indeed, the pure code limitation is unreasonable once we wish to
-  further treat our own code as untrustworthy, as to prevent leaks due
-  to bugs.
-}
+In a DIFC system, bugs that appear in this crux of the application
+simply \emph{that}---bugs---not vulnerabilities.
 
-One approach is to restrict computations to a particular monad---one
-other than \hs|IO|---for which we can control effects.
+In this demonstration, we describe one such DIFC system, called
+LIO~\cite{lio, concurrent-lio}.
 %
-In this demonstration, we describe the LIO library which implements
-one such monad, called \hs|LIO| (\emph{Labeled IO})~\cite{lio,
-concurrent-lio}.
+LIO is implemented as a Haskell library, and leverages Haskell's
+monadic approach to encoding side-effects as a way to control how (and
+if) information enters/exists the system.
 %
-Effects in the \hs|LIO| monad are mediated according to
-decentralized information flow control (DIFC)
-policies~\cite{myers:dlm, sabelfeld:language-based-iflow}.
+Specifically, LIO provides an \hs|LIO| monad, in which
+all side-effects are mediated according to DIFC.
 %
-In particular, this means that computations can perform arbitrary
-effects, as long as they do not violate the confidentiality or
+Importantly, however, a computation can perform arbitrary, complex
+effects, as long as it does not violate the confidentiality or
 integrity of data.
 %
 (Indeed, LIO automatically disallows effects that would violate

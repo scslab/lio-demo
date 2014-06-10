@@ -107,17 +107,16 @@ external world.
 
 A further important consequence of this approach to DIFC is that once
 we have a sound core language, which, in the case of LIO, is both
-concurrent and supports exceptions,
-%% \footnote{
-%%   The presence of exceptions in the core calculus is very important,
-%%   since it allows code to recover from DIFC violation
-%%   attempts~\cite{Breeze, stefan:2012:arxiv-flexible}.
-%%   %
-%%   For example, the failure of the above code to write to a reference
-%%   is not fatal---the untrusted code can recover and continue
-%%   executing.
-%%   
-%% }
+concurrent and supports exceptions,\footnote{
+  The presence of exceptions in the core calculus is very important,
+  since it allows code to recover from DIFC violation
+  attempts~\cite{Breeze, stefan:2012:arxiv-flexible}.
+  %
+  For example, the failure of the above code to write to a reference
+  is not fatal---the untrusted code can recover and continue
+  executing.
+  
+}
 we can introduce many features by simply wrapping existing \hs|IO|
 code.
 %

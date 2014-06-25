@@ -83,12 +83,13 @@ does not protect the review content.
 In general, DIFC enforcement in LIO follows this approach of exposing
 functions (e.g., \hs|writeLIORef|), which inspect the current label
 and the label of object they are about to read/write as to uphold the
-\emph{can flow to} relation; our definition for bind and return are trivial.
+\emph{can flow to} relation. Our definition for bind and return are
+trivial;
 %
-We solely rely on Haskell's monad support as a way to define a
+we solely rely on Haskell's monad support as a way to define a
 sublanguage that enforces DIFC.
 %
-By ensuring (using Safe Haskell) that untrusted code is written in
+By ensuring (with Safe Haskell) that untrusted code is written in
 this sublanguage, i.e., it cannot lift arbitrary \hs|IO| actions into
 \hs|LIO|, we can incorporate arbitrary (untrusted) code to compute on
 sensitive data.
@@ -100,7 +101,8 @@ external world.
 
 A further important consequence of this approach to DIFC is that once
 we have a sound core language, which, in the case of LIO, is both
-concurrent and supports exceptions,\footnote{
+concurrent and supports exceptions,
+\footnote{
   The presence of exceptions in the core calculus is very important,
   since it allows code to recover from DIFC violation
   attempts~\cite{Breeze, stefan:2012:arxiv-flexible}.
@@ -108,7 +110,6 @@ concurrent and supports exceptions,\footnote{
   For example, the failure of the above code to write to a reference
   is not fatal---the untrusted code can recover and continue
   executing.
-  
 }
 we can introduce many features by simply wrapping existing \hs|IO|
 code.
@@ -133,8 +134,8 @@ certain pitfalls, an alternative approach is clearly desirable.
 
 In the context of web applications, we present an advancement towards
 making DIFC policy-specification a mortal task.\footnote{
-  We have considered the alternative approach of cloning MIT Prof.
-  Nickolai Zeldovich.
+  We considered the alternative approach, cloning MIT Prof.
+  N. Zeldovich.
 }
 %
 Specifically, we demonstrate the declarative policy language, previously

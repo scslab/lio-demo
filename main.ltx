@@ -1,4 +1,4 @@
-\documentclass[letter,natbib,10pt,nocopyrightspace]{sigplanconf}
+\documentclass[letter,natbib,9pt]{sigplanconf}
 
 \usepackage{graphicx, verbatim}
 \usepackage{amsmath,amssymb,stmaryrd, amsthm}
@@ -10,27 +10,43 @@
 
 \newmintinline[hs]{haskell}{}
 \newcommand{\canflowto}{\ensuremath{\sqsubseteq}}
+\usepackage[compact,nonindentfirst]{titlesec}
+\titlespacing{\section}{0pt}{2ex}{0.5ex}
+\titlespacing{\subsection}{0pt}{1.25ex}{0.5ex}
+\titlespacing{\subsubsection}{0pt}{0.5ex}{0.0ex}
 
 \begin{document}
+\special{papersize=8.5in,11in}
+\setlength{\pdfpageheight}{\paperheight}
+\setlength{\pdfpagewidth}{\paperwidth}
 
-%\conferenceinfo{Haskell'14,} {September 22, 2011, Tokyo, Japan.}
-%\CopyrightYear{}
-%\copyrightdata{}
+\conferenceinfo{Haskell~'14}{September 4--5 2014, Gothenburg, Sweden}
+\CopyrightYear{2014}
+\copyrightdata{978-1-4503-3041-1/14/09}
+\doi{2633357.2633371}
 
 \titlebanner{}        % These are ignored unless
 \preprintfooter{}   % 'preprint' option specified.
 
-\title{Building Secure Systems with LIO}
-\subtitle{Demo}
+\title{Demo: Building Secure Systems with LIO}
+\subtitle{\vspace*{-0.3in}}
 
-\authorinfo{Deian Stefan}{Stanford}{deian@cs.stanford.edu}
+\authorinfo{Deian Stefan$^1$ \and Amit Levy$^1$ \and Alejandro Russo$^2$ \and David Mazi\`eres$^1$}
+{$^1$ Stanford University \and $^2$ Chalmers University of Technology}
+{\{deian, alevy, $\bot$\}@cs.stanford.edu \and russo@chalmers.se
+\vspace*{-0.3in}}
+%\authorinfo{Alejandro Russo}{Chalmers}{russo@chalmers.se }
 
 
 \maketitle
 
 
 \input{abstract}
-\keywords LIO, DCLabels, Hails, Decentralized information flow control, Web application
+\category{D.1.1}{Programming Techniques}
+{Applicative (Functional) Programming}
+\category{D.3.3}{Programming Languages}
+{Language Constructs and Features}
+\keywords Security, LIO, DCLabels, Hails, Decentralized information flow control, Web application
 
 \input{intro}
 \input{overview}

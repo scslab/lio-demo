@@ -5,15 +5,12 @@
 \usepackage[usenames,dvipsnames]{color}
 \usepackage{url}
 \usepackage{minted}
+\usepackage{balance}
 
 \newcommand{\Red}[1]{{\color{red} #1}}
 
 \newmintinline[hs]{haskell}{}
 \newcommand{\canflowto}{\ensuremath{\sqsubseteq}}
-\usepackage[compact,nonindentfirst]{titlesec}
-\titlespacing{\section}{0pt}{2ex}{0.5ex}
-\titlespacing{\subsection}{0pt}{1.25ex}{0.5ex}
-\titlespacing{\subsubsection}{0pt}{0.5ex}{0.0ex}
 
 \begin{document}
 \special{papersize=8.5in,11in}
@@ -29,12 +26,12 @@
 \preprintfooter{}   % 'preprint' option specified.
 
 \title{Demo: Building Secure Systems with LIO}
-\subtitle{\vspace*{-0.3in}}
+\subtitle{\vspace*{-0.2in}}
 
 \authorinfo{Deian Stefan$^1$ \and Amit Levy$^1$ \and Alejandro Russo$^2$ \and David Mazi\`eres$^1$}
 {$^1$ Stanford University \and $^2$ Chalmers University of Technology}
 {\{deian, alevy, $\bot$\}@cs.stanford.edu \and russo@chalmers.se
-\vspace*{-0.3in}}
+\vspace*{-0.5in}}
 %\authorinfo{Alejandro Russo}{Chalmers}{russo@chalmers.se }
 
 
@@ -46,7 +43,7 @@
 {Applicative (Functional) Programming}
 \category{D.3.3}{Programming Languages}
 {Language Constructs and Features}
-\keywords Security, LIO, DCLabels, Hails, Decentralized information flow control, Web application
+\keywords Security; LIO; DCLabels; Hails; Decentralized information flow control; Web application
 
 \input{intro}
 \input{overview}
@@ -54,5 +51,6 @@
 
 \bibliographystyle{abbrvnat}
 \bibliography{local}
+\balance
 
 \end{document}

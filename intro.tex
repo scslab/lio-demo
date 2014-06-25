@@ -34,11 +34,8 @@ Worse yet, such code may be leaking information through more subtle
 means, e.g., by encoding data in the number of reviews.
 %
 How, then, can we restrict the effects of a computation, without
-imposing that it not perform \emph{any} side-effects?~\footnote{
-  Indeed, the pure code limitation is unreasonable once we wish to
-  further treat our own code as untrustworthy, as to prevent leaks due
-  to bugs.
-}
+imposing that it not perform \emph{any} side-effects?
+%
 
 One approach is to restrict computations to a particular monad---one
 other than \hs|IO|---for which we can control effects.

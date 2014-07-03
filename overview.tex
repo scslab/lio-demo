@@ -3,10 +3,11 @@
 
 Like other DIFC systems, LIO tracks and controls the propagation of
 information by associating a \emph{label} with every piece of
-data.\footnote{
-  While LIO is polymorphic in the label model, we focus on LIO with
-  DCLabels~\cite{dclabels}, henceforth just labels. 
-}
+data.
+%\footnote{
+%  While LIO is polymorphic in the label model, we focus on LIO with
+%  DCLabels~\cite{dclabels}, henceforth just labels. 
+% }
 %
 A label encodes a security policy as a pair of positive boolean
 formulas over \emph{principals} specifying who may read or write data.
@@ -105,16 +106,17 @@ external world.
 
 A further important consequence of this approach to DIFC is that once
 we have a sound core language, which, in the case of LIO, is both
-concurrent and supports exceptions,\footnote{
-  The presence of exceptions in the core calculus is very important,
-  since it allows code to recover from DIFC violation
-  attempts~\cite{Breeze, stefan:2012:arxiv-flexible}.
+concurrent and supports exceptions~\cite{Breeze, stefan:2012:arxiv-flexible},
+%\footnote{
+%  The presence of exceptions in the core calculus is very important,
+%  since it allows code to recover from DIFC violation
+%  attempts~\cite{Breeze, stefan:2012:arxiv-flexible}.
   %
-  For example, the failure of the above code to write to a reference
-  is not fatal---the untrusted code can recover and continue
-  executing.
-  
-}
+%  For example, the failure of the above code to write to a reference
+%  is not fatal---the untrusted code can recover and continue
+%  executing.
+%  
+% }
 we can introduce many features by simply wrapping existing \hs|IO|
 code.
 %

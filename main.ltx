@@ -1,9 +1,11 @@
-\documentclass[letter,natbib,9pt,nocopyrightspace]{sigplanconf}
+\documentclass[letter,natbib,9pt]{sigplanconf}
 
 \usepackage{graphicx, verbatim}
 \usepackage{amsmath,amssymb,stmaryrd, amsthm}
 \usepackage[usenames,dvipsnames]{color}
-\usepackage{url}
+%\usepackage{url}
+\usepackage{hyperref}
+\usepackage[hyphenbreaks]{breakurl}
 \usepackage{minted}
 
 \newcommand{\Red}[1]{{\color{red} #1}}
@@ -21,16 +23,24 @@
 \titlebanner{}        % These are ignored unless
 \preprintfooter{}   % 'preprint' option specified.
 
-\title{Demo: Building Secure Systems with LIO}
+\title{Building Secure Systems with LIO (Demo)}
 
 \authorinfo{Deian Stefan and David Mazi\'eres}{Stanford}{\{deian,$\bot$\}@cs.stanford.edu}
 %\authorinfo{Alejandro Russo}{Chalmers}{russo@chalmers.se}
 
 
+\conferenceinfo{PLAS '14}{July 29, 2014, Uppsala, Sweden} 
+\copyrightyear{2014} 
+\copyrightdata{978-1-4503-2862-3/14/07} 
+\doi{nnnnnnn.nnnnnnn}
+
 \maketitle
 
 
 \input{abstract}
+
+\category{D.2.0}{Software Engineering}{Protection Mechanisms}
+\terms Security, Languages
 \keywords LIO, DCLabels, Hails, Decentralized information flow control, Web application
 
 \input{intro}

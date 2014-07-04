@@ -14,6 +14,10 @@
 \newmintinline[hs]{haskell}{}
 \newcommand{\canflowto}{\ensuremath{\sqsubseteq}}
 
+\usepackage[compact,nonindentfirst]{titlesec}
+\titlespacing{\section}{0pt}{1.5ex}{0.4ex}
+\titlespacing{\subsection}{0pt}{1ex}{0.37ex}
+
 \begin{document}
 
 %\conferenceinfo{Haskell'14,} {September 22, 2011, Tokyo, Japan.}
@@ -25,7 +29,7 @@
 
 \title{Building Secure Systems with LIO (Demo)}
 
-\authorinfo{Deian Stefan and David Mazi\'eres}{Stanford}{\{deian,$\bot$\}@cs.stanford.edu}
+\authorinfo{Deian Stefan and David Mazi\'eres}{Stanford University}{\{deian,$\bot$\}@cs.stanford.edu}
 %\authorinfo{Alejandro Russo}{Chalmers}{russo@chalmers.se}
 
 
@@ -41,13 +45,16 @@
 
 \category{D.2.0}{Software Engineering}{Protection Mechanisms}
 \terms Security, Languages
-\keywords LIO, DCLabels, Hails, Decentralized information flow control, Web application
+\keywords Security, LIO, DCLabels, Hails, IFC, Web
 
 \input{intro}
 \input{overview}
-\input{demo}
+%\input{demo}
 
+{\frenchspacing\scriptsize
+\setlength{\bibsep}{2pt}
 \bibliographystyle{abbrvnat}
 \bibliography{local}
+}
 
 \end{document}

@@ -1,7 +1,7 @@
 \section{Overview}
 \label{sec:overview}
 
-Like other DIFC systems, LIO tracks and controls the propagation of
+Like other IFC systems, LIO tracks and controls the propagation of
 information by associating a \emph{label} with every piece of
 data.
 %\footnote{
@@ -20,19 +20,15 @@ Indeed, such a label may be associated with \hs|"bob"|'s review, for a
 paper that both \hs|"bob"| and \hs|"alice"| are reviewing.
 %
 
-Our library associates labels with various language constructs.
+Our library associates labels with various language constructs,
+including references, channels, and files.
 %
-For example, LIO provides labeled mutable references (\hs|LIORef|s),
-labeled channels (\hs|LChan|s), a labeled file-system, a labeled
-database system, etc.
+Moreover, we provide a type, \hs|Labeled|, which can be used to
+explicitly label individual Haskell terms; since LIO is a library,
+terms that are not explicitly \hs|Labeled| are associated with the
+label of the current computation (described below).
 %
-Moreover, we provide a type, \hs|Labeled|, that is used to associate
-an explicit label with individual Haskell terms; since LIO is a
-library, terms that are not explicitly \hs|Labeled| are associated
-with the label of the current context (described below).
-%
-\hs|Labeled| values are, for example, used to associate labels with
-reviews.
+We use such \hs|Labeled| values to protect reviews.
 %
 
 Labels on objects are partially ordered according to a {\em can flow
@@ -45,88 +41,60 @@ be written to a file labeled $L_B =$ \hs|"bob" %% "bob"| since $L_B$
 preserves the secrecy of $L_A$.
 %
 In fact, $L_B$ is \emph{more} restrictive, as only
-\hs|"bob"|---not both \hs|"alice"| and \hs|"bob"|---can read the file,
-and, indeed, until \hs|"alice"| submits her review we may wish to
-associate this label with \hs|"bob"|'s review as to ensure that she
-cannot read it.
+\hs|"bob"|---not both \hs|"alice"| and \hs|"bob"|---can read the file.
 %
 Conversely, $L_B \not\canflowto L_A$, and thus data labeled $L_B$
-cannot be written to an object labeled $L_A$ (data secret to
-\hs|"bob"| cannot be leaked to a file that \hs|"alice"| can also
-read).
+cannot be written to an object labeled $L_A$.
 
-It is precisely this relation that is used by LIO when restricting the
-effects performed by a computation in the \hs|LIO| monad.
+It is precisely this relation that LIO uses to restrict the
+effects of computations executing in the \hs|LIO| monad.
 %
-In fact, the \hs|LIO| monad solely encapsulates a computation that
-executes in Haskell's ``default'' \hs|IO| monad.
-%
-Importantly, this computation is associated with a label---the
+The \hs|LIO| monad encapsulates a computation that executes in Haskell's
+``default'' \hs|IO| monad, associating
+with it a label---the
 \emph{current label}---that tracks the sensitivity of all the data
-that the computation has observed, i.e., all data in scope.
+that the computation has observed.
 %
 To illustrate the role of the current label, consider the code below
-that reads \hs|"bob"|'s private review and tries to leak it into a
-reference that \hs|"alice"| can read.
+that reads \hs|"bob"|'s private review and tries to leak it into
+\hs|"alice"|'s reference.
+\vspace*{-1.0em}
 \begin{minted}[frame=lines, mathescape]{haskell}
 -- Current label: public == True %% True
 bobReview <- readFile "/reviews/bob/5.txt"
 -- Current label: "bob" %% True
--- labelOf aliceRef == "alice" %% "alice"
 writeLIORef aliceRef bobReview
 -- Fail: "bob" %% True $\not\canflowto$ "alice" %% "alice"
 \end{minted}
+\vspace*{-0.4em}
 %
-Here, the current label is first raised by \hs|readFile| to reflect
-the fact that information sensitive to \hs|"bob"| is being
-incorporated into the context.
+Here, the current label is first raised by \hs|readFile|, reflexing
+that \hs|"bob"|'s sensitive information was incorporated into the
+context.
 %
 Importantly, however, this label is also used to subsequently restrict
-the effects performed by the computation; in this case, the
-\hs|writeLIORef| action raises an exception to reflect that
-the computation tried to write to a reference whose label
-does not protect the review content.
+writes; in this case, the \hs|writeLIORef| action throws an
+exception, since the write is unsafe.
 
-In general, DIFC enforcement in LIO follows this approach of exposing
+In general, IFC enforcement in LIO follows this approach of exposing
 functions (e.g., \hs|writeLIORef|), which inspect the current label
 and the label of object they are about to read/write as to uphold the
 \emph{can flow to} relation.
 %
 We solely rely on Haskell's monad support as a way to define a
-sublanguage for which we can enforce DIFC.
+sublanguage for which we can enforce IFC.
 %
-By ensuring that untrusted code is written in this sublanguage, i.e.,
+And, by ensuring that untrusted code is written in this sublanguage, i.e.,
 it cannot execute arbitrary \hs|IO| actions, we can incorporate
 arbitrary untrusted code to compute on sensitive data.
 %
-For example, our conference review system can incorporate code
-provided by users of the system without fear of leaking reviews or
-reviewer identities, all while allowing the code to interact with the
-external world.
+For example, as we will show, our conference review system can
+incorporate code provided by users of the system without fear of
+leaking reviews or reviewer identities, all while allowing the code to
+interact with the external world (e.g., using the HTTP client).
 
-A further important consequence of this approach to DIFC is that once
-we have a sound core language, which, in the case of LIO, is both
-concurrent and supports exceptions~\cite{Breeze, stefan:2012:arxiv-flexible},
-%\footnote{
-%  The presence of exceptions in the core calculus is very important,
-%  since it allows code to recover from DIFC violation
-%  attempts~\cite{Breeze, stefan:2012:arxiv-flexible}.
-  %
-%  For example, the failure of the above code to write to a reference
-%  is not fatal---the untrusted code can recover and continue
-%  executing.
-%  
-% }
-we can introduce many features by simply wrapping existing \hs|IO|
-code.
-%
-As mentioned, LIO supports labeled alternatives to mutable references,
-mutable variables, channels, files, databases, HTTP clients, etc.
-%
-Some of these features (e.g., the database) are crucial for
-implementation applications such as the conference review system.
 
-\section{Automatic data labeling for Web applications}
+\section{Automatic data labeling}
 
 LIO guarantees that code executing in the \hs|LIO| monad cannot
 violate the confidentiality and integrity restrictions imposed by
@@ -136,77 +104,74 @@ Thus the untrusted parts of an application can be implement almost
 carelessly---LIO ensures that bugs do not escalate to vulnerabilities.
 %
 Unfortunately, the trusted part of an application, that of assigning
-appropriate labels to data, is challenging; indeed, setting an
-overly-permissive label on an object can be a vulnerability.
+appropriate labels to data, is still a challenge.
 %
-And, while using a simple label model such as DCLabels can against
+And, while using a simple label model such as DCLabels can address
 certain pitfalls, a non-expert approach to setting labels is clearly
 desirable.
 
-In the context of web applications, we present an advancement towards
-making DIFC policy-specification an approachable task for average
-developers by using a declarative policy language, as in the Hails web
-framework~\cite{hails}.
-%% \footnote{
-%%   We consider the alternative approach of cloning MIT Prof.  Nickolai
-%%   Zeldovich as future work.
-%% }
+In the context of web applications, we present a declarative policy
+language, similar to that used in Hails~\cite{hails}, which makes this
+task more tractable.
 %
-In web applications, it is common for developers to specify the
-application data model in a declarative fashion.
+Specifically, since data models for web applications are typically
+specified in a declarative form, and, in many applications, the
+authoritative source for who should access the data resides in the
+data itself, our policy language leverages and extends these ideas
+directly. 
 %
-Hails leverages this design parading and the observation that, in many
-web applications, the authoritative source for who should access data
-resides in the data itself to provide developers with a means for
-specifying the policy alongside the data model.
-%
+In our system, labels are specified as read and write clauses
+alongside the data model, and in terms of it.
 
 Consider the definition of the \hs|Review| data type used in our
 conference review system:
+\vspace*{-1.0em}
 \begin{minted}[frame=lines]{haskell}
-data Review = Review { reviewId    :: ReviewId
-                     , reviewPaper :: PaperId
-                     , reviewOwner :: UserName
-                     , reviewBody  :: Text }
+data Review = Review { _id   :: ID
+                     , paper :: ID
+                     , owner :: User, ... }
 \end{minted}
+\vspace*{-0.4em}
 To associate a label with a review we can leverage the 
 information present in the record type.
 %
 Specifically, we can specify that the only user allowed to modify such
-a review is the owner of the review herself; and, we can specify that
-the only users allowed to read such a review are the owner and other
-reviewers of the same paper.
+a review is the owner of the review, and that the only users allowed
+to read such a review are the owner and other reviewers of the same
+paper.
 %
 The latter declaration requires that we perform a lookup, using the
 paper id of the current review, to find the other reviewers.
 %
-The code implementing this policy is given below.
+Below is the policy code specifying this.
 %
+\vspace*{-1.0em}
 \begin{minted}[frame=lines]{haskell}
 policy :: HailsDB m => Review -> m DCLabel
 policy rev = do
-  let author = reviewOwner rev
-  reviewers <- findReviewersOf $ reviewPaper rev
-  makePolicy $ do
-    readers ==> author \/ reviewers
-    writers ==> author
+  let me = owner rev
+  reviewers <- findReviewersOf $ paper rev
+  makePolicy $ do readers ==> me \/ reviewers
+                  writers ==> me
 \end{minted}
+\vspace*{-0.4em}
 %
-The function is self-explanatory; we only remark that the function
+This function is self-explanatory; we only remark that the function
 takes a \hs|Review| and returns a \hs|DCLabel| in a monad \hs|m| that
 allows code to perform database actions (in this case the
 \hs|findReviewersOf| action), a change from the original pure policies
 of Hails.
 %
 
-We remark, that while, some care must be taken to ensure that the
-specified policy is correct, the extend to understanding a security
-policy in such LIO/Hails applications is limited to such functions.
+While some care must be taken to ensure that the specified policy is
+correct, the extend of understanding a security policy in such
+LIO/Hails applications is limited to such functions.
 %
-It is these policy functions that the database system uses to label
+It is these policy functions that our database system uses to label
 reviews when a fetch, insert, or update is performed.
 %
-Indeed, the core of the conference review system does not manipulate
-labels---high-level APIs make most of the DIFC details transparent.
+Indeed, as we will see in the demo, the core of the conference review
+system does not manipulate labels; high-level APIs leveraging this
+automatic labeling approach make most of the IFC details transparent.
 
 
